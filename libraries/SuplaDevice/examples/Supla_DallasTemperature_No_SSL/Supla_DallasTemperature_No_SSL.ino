@@ -24,25 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // Add include to DS sensor
 #include <supla/sensor/DS18B20.h>
 
-
-// Choose proper network interface for your card:
-// Arduino Mega with EthernetShield W5100:
-#include <supla/network/ethernet_shield.h>
-// Ethernet MAC address
-uint8_t mac[6] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05};
-Supla::EthernetShield ethernet(mac);
-//
-// Arduino Mega with ENC28J60:
-// #include <supla/network/ENC28J60.h>
-// Supla::ENC28J60 ethernet(mac);
-//
-// ESP8266 based board:
-// #include <supla/network/esp_wifi.h>
-// Supla::ESPWifi wifi("your_wifi_ssid", "your_wifi_password");
-//
-// ESP32 based board:
-// #include <supla/network/esp32_wifi.h>
-// Supla::ESP32Wifi wifi("your_wifi_ssid", "your_wifi_password");
+#include <supla/network/esp_wifi.h>
+Supla::ESPWifi wifi("your_wifi_ssid", "your_wifi_password");
 
 void setup() {
 
@@ -61,21 +44,6 @@ void setup() {
    * Otherwise you will get "Channel conflict!" error.
    */
 
-  // CHANNEL0 - RELAY
-  SuplaDevice.addRelay(44, true);           // ﻿44 - ﻿Pin number where the relay is connected      
-                                      // Call SuplaDevice.addRelay(44, true) with an extra "true" parameter 
-                                      // to enable "port value inversion"
-                                      // where HIGH == LOW, and LOW == HIGH   
-
-  // CHANNEL1 - RELAY
-  SuplaDevice.addRelay(45, true);           // 45 - ﻿﻿Pin number where the relay is connected   
-
-  // CHANNEL3 - TWO RELAYS (Roller shutter operation)
-  SuplaDevice.addRollerShutterRelays(46,     // 46 - ﻿﻿Pin number where the 1st relay is connected   
-                                     47, true);    // 47 - ﻿Pin number where the 2nd relay is connected  
-
-
-  // CHANNEL6-9 - Thermometer DS18B20
   // 4 DS18B20 thermometers at pin 23. DS address can be omitted when there is only one device at a pin
   DeviceAddress ds1addr = {0x28, 0xFF, 0xC8, 0xAB, 0x6E, 0x18, 0x01, 0xFC};
   DeviceAddress ds2addr = {0x28, 0xFF, 0x54, 0x73, 0x6E, 0x18, 0x01, 0x77};
@@ -87,13 +55,16 @@ void setup() {
   new Supla::Sensor::DS18B20(23, ds3addr);
   new Supla::Sensor::DS18B20(23, ds4addr);
 
+  /* By default this library uses secured connection with SUPLA server. You can switch it of by writing below line 
+   * Works only with ESP8266 boards!
+   */
+
+  wifi.enableSSL(false);
 
   /*
    * SuplaDevice Initialization.
-   * Server address, LocationID and LocationPassword are available at https://cloud.supla.org 
    * If you do not have an account, you can create it at https://cloud.supla.org/account/create
    * SUPLA and SUPLA CLOUD are free of charge
-   * 
    */
 
   SuplaDevice.begin(GUID,              // Global Unique Identifier 

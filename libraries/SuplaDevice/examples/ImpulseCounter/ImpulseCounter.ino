@@ -16,7 +16,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <SPI.h>
 #include <SuplaDevice.h>
-#include <supla/control/rgbw_base.h>
+#include <SuplaImpulseCounter.h>
 
 // Choose proper network interface for your card:
 // Arduino Mega with EthernetShield W5100:
@@ -37,52 +37,8 @@ Supla::EthernetShield ethernet(mac);
 // #include <supla/network/esp32_wifi.h>
 // Supla::ESP32Wifi wifi("your_wifi_ssid", "your_wifi_password");
 
-/*
- * Youtube: https://youtu.be/FE9tqzTjmA4
- * Youtube example was done on older version of SuplaDevice library
- */
-
-#define RED_PIN              44
-#define GREEN_PIN            45
-#define BLUE_PIN             46
-#define BRIGHTNESS_PIN       7
-#define COLOR_BRIGHTNESS_PIN 8
-
-class RgbwLeds : public Supla::Control::RGBWBase {
- public:
-  RgbwLeds(int redPin,
-           int greenPin,
-           int bluePin,
-           int brightnessPin,
-           int colorBrightnessPin)
-      : redPin(redPin),
-        greenPin(greenPin),
-        bluePin(bluePin),
-        brightnessPin(brightnessPin),
-        colorBrightnessPin(colorBrightnessPin) {
-  }
-
-  void setRGBWValueOnDevice(uint8_t red,
-                            uint8_t green,
-                            uint8_t blue,
-                            uint8_t colorBrightness,
-                            uint8_t brightness) {
-    analogWrite(brightnessPin, (brightness * 255) / 100);
-    analogWrite(colorBrightnessPin, (colorBrightness * 255) / 100);
-    analogWrite(redPin, red);
-    analogWrite(greenPin, green);
-    analogWrite(bluePin, blue);
-  }
-
- protected:
-  int redPin;
-  int greenPin;
-  int bluePin;
-  int brightnessPin;
-  int colorBrightnessPin;
-};
-
 void setup() {
+
   Serial.begin(9600);
 
   // Replace the falowing GUID with value that you can retrieve from https://www.supla.org/arduino/get-guid
@@ -97,27 +53,33 @@ void setup() {
    * then you must also remove the device itself from cloud.supla.org.
    * Otherwise you will get "Channel conflict!" error.
    */
+    
+  // CHANNEL0 - Impulse Counter on pin 34, without status LED (it is not implemented yet), counting raising edge (from LOW to HIGH), no pullup on pin, and 10 ms debounce timeout
+  SuplaDevice.addImpulseCounter(34, 0, true, false, 10);
+  
+  // CHANNEL1 - Impulse Counter on pin 34, without status LED (it is not implemented yet), counting folling edge (from HIGH to LOW), with pullup on pin, and 50 ms debounce timeout
+  SuplaDevice.addImpulseCounter(35, 0, false, true, 50);
+  
+  // Uncomment below line to cleanup the counter storage data
+//  SuplaImpulseCounter::clearStorage();
 
-  // CHANNEL0 - RGB controller and dimmer (RGBW)
-  new RgbwLeds(
-      RED_PIN, GREEN_PIN, BLUE_PIN, COLOR_BRIGHTNESS_PIN, BRIGHTNESS_PIN);
 
   /*
    * SuplaDevice Initialization.
-   * Server address, LocationID and LocationPassword are available at
-   * https://cloud.supla.org If you do not have an account, you can create it at
-   * https://cloud.supla.org/account/create SUPLA and SUPLA CLOUD are free of
-   * charge
-   *
+   * Server address is available at https://cloud.supla.org 
+   * If you do not have an account, you can create it at https://cloud.supla.org/account/create
+   * SUPLA and SUPLA CLOUD are free of charge
+   * 
    */
 
-  SuplaDevice.begin(
-      GUID,              // Global Unique Identifier
-      "svr1.supla.org",  // SUPLA server address
-      "email@address",   // Email address used to login to Supla Cloud
-      AUTHKEY);          // Authorization key
+  SuplaDevice.begin(GUID,              // Global Unique Identifier 
+                    "svr1.supla.org",  // SUPLA server address
+                    "email@address",   // Email address used to login to Supla Cloud
+                    AUTHKEY);          // Authorization key
+    
 }
 
 void loop() {
   SuplaDevice.iterate();
 }
+
