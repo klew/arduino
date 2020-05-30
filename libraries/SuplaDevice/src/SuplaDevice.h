@@ -209,6 +209,7 @@ class SuplaDeviceClass {
              unsigned char version = 10);
 
   void setName(const char *Name);
+  void setSoftVer(const char *SoftVer);
 
   int addRelay(int relayPin1,
                int relayPin2,

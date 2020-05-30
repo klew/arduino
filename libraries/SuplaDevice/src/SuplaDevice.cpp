@@ -241,6 +241,11 @@ void SuplaDeviceClass::setName(const char *Name) {
   setString(Supla::Channel::reg_dev.Name, Name, SUPLA_DEVICE_NAME_MAXSIZE);
 }
 
+void SuplaDeviceClass::setSoftVer(const char *SoftVer) {
+  if (isInitialized(true)) return;
+  setString(Supla::Channel::reg_dev.SoftVer, SoftVer, SUPLA_SOFTVER_MAXSIZE);
+}
+
 int SuplaDeviceClass::addChannel(int pin1,
                                  int pin2,
                                  bool hiIsLo,
