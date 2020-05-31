@@ -177,7 +177,9 @@ bool SuplaDeviceClass::begin(char GUID[SUPLA_GUID_SIZE],
 #endif
   }
 
-  setString(Supla::Channel::reg_dev.SoftVer, "2.3.1", SUPLA_SOFTVER_MAXSIZE);
+  if (strnlen(Supla::Channel::reg_dev.SoftVer, SUPLA_SOFTVER_MAXSIZE) == 0) {
+	  setString(Supla::Channel::reg_dev.SoftVer, "2.3.1", SUPLA_SOFTVER_MAXSIZE);
+  }
 
   Supla::Network::Setup();
 
@@ -239,6 +241,11 @@ bool SuplaDeviceClass::begin(char GUID[SUPLA_GUID_SIZE],
 void SuplaDeviceClass::setName(const char *Name) {
   if (isInitialized(true)) return;
   setString(Supla::Channel::reg_dev.Name, Name, SUPLA_DEVICE_NAME_MAXSIZE);
+}
+
+void SuplaDeviceClass::setSoftVer(const char *SoftVer) {
+  if (isInitialized(true)) return;
+  setString(Supla::Channel::reg_dev.SoftVer, SoftVer, SUPLA_SOFTVER_MAXSIZE);
 }
 
 int SuplaDeviceClass::addChannel(int pin1,
