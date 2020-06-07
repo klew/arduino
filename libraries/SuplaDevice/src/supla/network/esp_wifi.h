@@ -26,6 +26,7 @@
 
 #define MAX_SSID_SIZE          32
 #define MAX_WIFI_PASSWORD_SIZE 64
+#define MAX_HOSTNAME           32
 
 WiFiEventHandler gotIpEventHandler, disconnectedEventHandler;
 
@@ -154,7 +155,8 @@ class ESPWifi : public Supla::Network {
         [](const WiFiEventStationModeDisconnected &event) {
           Serial.println("WiFi station disconnected");
         });
-
+    
+	WiFi.hostname(hostname);
     Serial.print("WiFi: establishing connection with SSID: \"");
     Serial.print(ssid);
     Serial.println("\"");
@@ -183,12 +185,19 @@ class ESPWifi : public Supla::Network {
     }
   }
 
+  void setHostName(const char* wifiHostname) {
+    if (wifiHostname) {
+      strncpy(hostname, wifiHostname, MAX_HOSTNAME);
+    }
+  }
+
  protected:
   WiFiClient *client = NULL;
   bool isSecured;
   String fingerprint;
   char ssid[MAX_SSID_SIZE];
   char password[MAX_WIFI_PASSWORD_SIZE];
+  char hostname[MAX_HOSTNAME];
 };
 
 };  // namespace Supla
