@@ -145,12 +145,10 @@ bool SuplaDeviceClass::begin(char GUID[SUPLA_GUID_SIZE],
 
   if (Supla::Channel::reg_dev.ServerName[0] == NULL) {
     status(STATUS_UNKNOWN_SERVER_ADDRESS, "Unknown server address");
-    return false;
   }
 
   if (Supla::Channel::reg_dev.Email[0] == NULL) {
     status(STATUS_MISSING_CREDENTIALS, "Unknown email address");
-    return false;
   }
 
   bool emptyAuthKeyDetected = true;
