@@ -107,8 +107,9 @@ class ESPWifi : public Supla::Network {
               server,
               connectionPort);
 
-//    static_cast<WiFiClientSecure*>(client)->setBufferSizes(512, 512); // EXPERIMENTAL
-
+	static_cast<WiFiClientSecure*>(client)->setBufferSizes(256, 256); // EXPERIMENTAL
+	static_cast<WiFiClientSecure*>(client)->setTimeout(500);
+	
     bool result = client->connect(server, connectionPort);
 
     if (result && isSecured) {
