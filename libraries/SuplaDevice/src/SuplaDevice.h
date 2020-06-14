@@ -266,7 +266,7 @@ class SuplaDeviceClass {
   void channelSetActivityTimeoutResult(
       TSDC_SuplaSetActivityTimeoutResult *result);
 
-  void setSwVersion(const char *);
+  void setSwVersion(const char *swVersion);
   int getCurrentStatus();
 };
 
