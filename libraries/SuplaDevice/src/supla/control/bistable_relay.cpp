@@ -56,7 +56,7 @@ void BistableRelay::onInit() {
     turnOff();
   }
 
-  pinMode(pin, OUTPUT);
+  Supla::Io::pinMode(pin, OUTPUT);
 }
 
 void BistableRelay::iterateAlways() {
