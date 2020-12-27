@@ -16,6 +16,7 @@
 
 #include "roller_shutter.h"
 #include "supla/storage/storage.h"
+#include "../io.h"
 
 namespace Supla {
 namespace Control {
@@ -53,10 +54,10 @@ RollerShutter::RollerShutter(int pinUp, int pinDown, bool highIsOn)
 }
 
 void RollerShutter::onInit() {
-  pinMode(pinUp, OUTPUT);
-  pinMode(pinDown, OUTPUT);
-  digitalWrite(pinUp, highIsOn ? LOW : HIGH);
-  digitalWrite(pinDown, highIsOn ? LOW : HIGH);
+  Supla::Io::pinMode(pinUp, OUTPUT);
+  Supla::Io::pinMode(pinDown, OUTPUT);
+  Supla::Io::digitalWrite(pinUp, highIsOn ? LOW : HIGH);
+  Supla::Io::digitalWrite(pinDown, highIsOn ? LOW : HIGH);
 }
 
 /*
@@ -271,19 +272,19 @@ void RollerShutter::stopMovement() {
 }
 
 void RollerShutter::relayDownOn() {
-  digitalWrite(pinDown, highIsOn ? HIGH : LOW);
+  Supla::Io::digitalWrite(pinDown, highIsOn ? HIGH : LOW);
 }
 
 void RollerShutter::relayUpOn() {
-  digitalWrite(pinUp, highIsOn ? HIGH : LOW);
+  Supla::Io::digitalWrite(pinUp, highIsOn ? HIGH : LOW);
 }
 
 void RollerShutter::relayDownOff() {
-  digitalWrite(pinDown, highIsOn ? LOW : HIGH);
+  Supla::Io::digitalWrite(pinDown, highIsOn ? LOW : HIGH);
 }
 
 void RollerShutter::relayUpOff() {
-  digitalWrite(pinUp, highIsOn ? LOW : HIGH);
+  Supla::Io::digitalWrite(pinUp, highIsOn ? LOW : HIGH);
 }
 
 void RollerShutter::startClosing() {
