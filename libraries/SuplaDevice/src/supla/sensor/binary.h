@@ -45,7 +45,7 @@ class Binary : public Element {
   }
 
   void onInit() {
-    pinMode(pin, pullUp ? INPUT_PULLUP : INPUT);
+    Supla::Io::pinMode(pin, pullUp ? INPUT_PULLUP : INPUT);
     channel.setNewValue(getValue());
   }
 
